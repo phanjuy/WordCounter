@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Immutable;
+using System.Text.RegularExpressions;
 
 namespace WordCounter;
 
@@ -34,6 +35,7 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
     private static List<string> Format(Dictionary<string, int> dictionary)
     {
         return dictionary
+            .ToImmutableSortedDictionary()
             .Select(entry => $"{entry.Key}{":"}{entry.Value}")
             .ToList();
     }

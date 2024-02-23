@@ -13,6 +13,8 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
 
         var words = Split(text);
 
+        var histogram = GetWordHistogram(words);
+
         string processedText = text.ToUpperInvariant();
 
         File.WriteAllText(OutputFilePath, processedText);
@@ -23,4 +25,10 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
         var pattern = @"\W+";
         return Regex.Split(text.ToLowerInvariant(), pattern).ToList();
     }
+
+    private static Dictionary<string, int> GetWordHistogram(IEnumerable<string> words)
+    {
+        return words.GroupBy(w => w).ToDictionary(g => g.Key, g => g.Count());
+    }
+
 }

@@ -15,9 +15,9 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
 
         var histogram = GetWordHistogram(words);
 
-        string processedText = text.ToUpperInvariant();
+        var result = Format(histogram);
 
-        File.WriteAllText(OutputFilePath, processedText);
+        File.WriteAllLines(OutputFilePath, result);
     }
 
     private static List<string> Split(string text)
@@ -31,4 +31,10 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
         return words.GroupBy(w => w).ToDictionary(g => g.Key, g => g.Count());
     }
 
+    private static List<string> Format(Dictionary<string, int> dictionary)
+    {
+        return dictionary
+            .Select(entry => $"{entry.Key}{":"}{entry.Value}")
+            .ToList();
+    }
 }

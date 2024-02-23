@@ -1,4 +1,6 @@
-﻿namespace WordCounter;
+﻿using System.Text.RegularExpressions;
+
+namespace WordCounter;
 
 internal class TextFileProcessor(string inputFilePath, string outputFilePath)
 {
@@ -9,8 +11,16 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
     {
         string text = File.ReadAllText(InputFilePath);
 
+        var words = Split(text);
+
         string processedText = text.ToUpperInvariant();
 
         File.WriteAllText(OutputFilePath, processedText);
+    }
+
+    private static List<string> Split(string text)
+    {
+        var pattern = @"\W+";
+        return Regex.Split(text.ToLowerInvariant(), pattern).ToList();
     }
 }

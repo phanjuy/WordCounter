@@ -12,7 +12,7 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
 
     public void Process()
     {
-        using (StreamReader reader = new StreamReader(InputFilePath))
+        using StreamReader reader = File.OpenText(InputFilePath);
         {
             while (!reader.EndOfStream)
             {

@@ -5,7 +5,7 @@ namespace WordCounter;
 
 internal class WordHistogram(string inputFilePath, string outputFilePath)
 {
-    public Dictionary<string, int> GetWordHistogram()
+    public Dictionary<string, int> GetWordHistogram(string pattern = @"\W+")
     {
         Dictionary<string, int> histogram = [];
 
@@ -17,7 +17,7 @@ internal class WordHistogram(string inputFilePath, string outputFilePath)
 
             if (!string.IsNullOrEmpty(line))
             {
-                List<string> words = Split(line);
+                var words = Regex.Split(line.ToLowerInvariant(), pattern);
 
                 foreach (var word in words)
                 {
@@ -40,11 +40,5 @@ internal class WordHistogram(string inputFilePath, string outputFilePath)
         {
             writer.WriteLine($"{entry.Key}: {entry.Value}");
         }
-    }
-
-    private static List<string> Split(string text)
-    {
-        var pattern = @"\W+";
-        return Regex.Split(text.ToLowerInvariant(), pattern).ToList();
     }
 }

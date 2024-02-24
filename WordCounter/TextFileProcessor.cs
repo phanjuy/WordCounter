@@ -8,15 +8,21 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
     public string InputFilePath { get; } = inputFilePath;
     public string OutputFilePath { get; } = outputFilePath;
 
+    private readonly Dictionary<string, int> _histogram = [];
+
     public void Process()
     {
-        string text = File.ReadAllText(InputFilePath);
+        string[] lines = File.ReadAllLines(InputFilePath);
 
-        var words = Split(text);
-
-        var histogram = GetWordHistogram(words);
-
-        var result = Format(histogram);
+        foreach (var line in lines)
+        {
+            if (!string.IsNullOrEmpty(line))
+            {
+                List<string> words = Split(line);
+                CountWords(words);
+            }
+        }
+        var result = Format(_histogram);
 
         File.WriteAllLines(OutputFilePath, result);
     }
@@ -27,9 +33,17 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
         return Regex.Split(text.ToLowerInvariant(), pattern).ToList();
     }
 
-    private static Dictionary<string, int> GetWordHistogram(IEnumerable<string> words)
+    private Dictionary<string, int> CountWords(IEnumerable<string> words)
     {
-        return words.GroupBy(w => w).ToDictionary(g => g.Key, g => g.Count());
+        foreach (var word in words)
+        {
+            if (!_histogram.TryGetValue(word, out int value))
+            {
+                _histogram[word] = 0;
+            }
+            _histogram[word] = ++value;
+        }
+        return _histogram;
     }
 
     private static List<string> Format(Dictionary<string, int> dictionary)

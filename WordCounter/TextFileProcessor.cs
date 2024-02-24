@@ -9,15 +9,8 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
 
     public void Process()
     {
-        GetWordHistogram(inputFilePath);
-
-        using (StreamWriter writer = new StreamWriter(outputFilePath))
-        {
-            foreach (var entry in _histogram.ToImmutableSortedDictionary())
-            {
-                writer.WriteLine($"{entry.Key}: {entry.Value}");
-            }
-        }
+        GetWordHistogram();
+        WriteHistogramToFile();
     }
 
     private void GetWordHistogram()
@@ -31,6 +24,15 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
                 List<string> words = Split(line);
                 CountWords(words);
             }
+        }
+    }
+
+    private void WriteHistogramToFile()
+    {
+        StreamWriter writer = new StreamWriter(outputFilePath);
+        foreach (var entry in _histogram.ToImmutableSortedDictionary())
+        {
+            writer.WriteLine($"{entry.Key}: {entry.Value}");
         }
     }
 

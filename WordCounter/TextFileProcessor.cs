@@ -12,16 +12,19 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
 
     public void Process()
     {
-        IEnumerable<string> lines = File.ReadLines(InputFilePath);
-
-        foreach (var line in lines)
+        using (StreamReader reader = new StreamReader(InputFilePath))
         {
-            if (!string.IsNullOrEmpty(line))
+            while (!reader.EndOfStream)
             {
-                List<string> words = Split(line);
-                CountWords(words);
+                var line = reader.ReadLine();
+                if (!string.IsNullOrEmpty(line))
+                {
+                    List<string> words = Split(line);
+                    CountWords(words);
+                }
             }
         }
+
         var result = Format(_histogram);
 
         File.WriteAllLines(OutputFilePath, result);

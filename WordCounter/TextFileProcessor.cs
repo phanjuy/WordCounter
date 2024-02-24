@@ -9,24 +9,27 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
 
     public void Process()
     {
-        using StreamReader reader = File.OpenText(inputFilePath);
-        {
-            while (!reader.EndOfStream)
-            {
-                var line = reader.ReadLine();
-                if (!string.IsNullOrEmpty(line))
-                {
-                    List<string> words = Split(line);
-                    CountWords(words);
-                }
-            }
-        }
+        GetWordHistogram(inputFilePath);
 
         using (StreamWriter writer = new StreamWriter(outputFilePath))
         {
             foreach (var entry in _histogram.ToImmutableSortedDictionary())
             {
                 writer.WriteLine($"{entry.Key}: {entry.Value}");
+            }
+        }
+    }
+
+    private void GetWordHistogram()
+    {
+        StreamReader reader = File.OpenText(inputFilePath);
+        while (!reader.EndOfStream)
+        {
+            var line = reader.ReadLine();
+            if (!string.IsNullOrEmpty(line))
+            {
+                List<string> words = Split(line);
+                CountWords(words);
             }
         }
     }

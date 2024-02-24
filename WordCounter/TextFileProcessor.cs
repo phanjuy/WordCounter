@@ -25,9 +25,13 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
             }
         }
 
-        var result = Format(_histogram);
-
-        File.WriteAllLines(OutputFilePath, result);
+        using (StreamWriter writer = new StreamWriter(OutputFilePath))
+        {
+            foreach (var entry in _histogram.ToImmutableSortedDictionary())
+            {
+                writer.WriteLine($"{entry.Key}: {entry.Value}");
+            }
+        }
     }
 
     private static List<string> Split(string text)
@@ -47,13 +51,5 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
             _histogram[word] = ++value;
         }
         return _histogram;
-    }
-
-    private static List<string> Format(Dictionary<string, int> dictionary)
-    {
-        return dictionary
-            .ToImmutableSortedDictionary()
-            .Select(entry => $"{entry.Key}{":"}{entry.Value}")
-            .ToList();
     }
 }

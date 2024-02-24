@@ -1,0 +1,55 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DOTNET_VERSION: 8.0.x
+  AZURE_WEBAPP_NAME: wordcounter-webapp
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+      # os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    # - name: Start SQL Server
+    #   run: |
+    #     docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=yourStrong(!)Password" -e "MSSQL_PID=Express" -p 1433:1433 -d mcr.microsoft.com/mssql/server:latest
+    #     docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build app
+      run: dotnet build -c Release --no-restore
+
+    - name: Run automated tests
+      run: dotnet test -c Release --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+    - name: Upload code coverage report
+      uses: codecov/codecov-action@v2
+
+    # - name: Publish app
+    #   run: dotnet publish -c Release -o ./out
+    
+    # - name: Deploy to Azure WebApps
+    #   uses: azure/webapps-deploy@v2
+    #   with:
+    #     app-name: ${{ env.AZURE_WEBAPP_NAME }}
+    #     publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_SECRET }}
+    #     package: ./out

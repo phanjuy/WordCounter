@@ -1,15 +1,19 @@
 ﻿using System.Collections.Immutable;
+using System.IO.Abstractions;
 using System.Text.RegularExpressions;
 
 namespace WordCounter;
 
-internal class WordHistogram(string inputFilePath, string outputFilePath)
+internal class WordHistogram(string inputFilePath, string outputFilePath, IFileSystem fileSystem)
 {
+    public WordHistogram(string inputFilePath, string outputFilePath)
+        : this(inputFilePath, outputFilePath, new FileSystem()) { }
+
     public Dictionary<string, int> GetWordHistogram(string pattern = @"\W+")
     {
         Dictionary<string, int> histogram = [];
 
-        using StreamReader reader = File.OpenText(inputFilePath);
+        using StreamReader reader = fileSystem.File.OpenText(inputFilePath);
 
         while (!reader.EndOfStream)
         {
@@ -34,7 +38,7 @@ internal class WordHistogram(string inputFilePath, string outputFilePath)
 
     public void WriteToFile(Dictionary<string, int> histogram)
     {
-        using StreamWriter writer = File.CreateText(outputFilePath);
+        using StreamWriter writer = fileSystem.File.CreateText(outputFilePath);
 
         foreach (var entry in histogram.ToImmutableSortedDictionary())
         {

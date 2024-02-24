@@ -29,7 +29,7 @@ internal class WordHistogram(string inputFilePath, string outputFilePath)
 
     private void WriteHistogramToFile()
     {
-        StreamWriter writer = new StreamWriter(outputFilePath);
+        StreamWriter writer = File.CreateText(outputFilePath);
         foreach (var entry in _histogram.ToImmutableSortedDictionary())
         {
             writer.WriteLine($"{entry.Key}: {entry.Value}");

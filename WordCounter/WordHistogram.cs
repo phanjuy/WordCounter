@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace WordCounter;
 
-internal class WordHistogram(string inputFilePath, string outputFilePath, IFileSystem fileSystem)
+internal sealed class WordHistogram(string inputFilePath, string outputFilePath, IFileSystem fileSystem)
 {
     public WordHistogram(string inputFilePath, string outputFilePath)
         : this(inputFilePath, outputFilePath, new FileSystem()) { }

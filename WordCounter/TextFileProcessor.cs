@@ -5,14 +5,11 @@ namespace WordCounter;
 
 internal class TextFileProcessor(string inputFilePath, string outputFilePath)
 {
-    public string InputFilePath { get; } = inputFilePath;
-    public string OutputFilePath { get; } = outputFilePath;
-
     private readonly Dictionary<string, int> _histogram = [];
 
     public void Process()
     {
-        using StreamReader reader = File.OpenText(InputFilePath);
+        using StreamReader reader = File.OpenText(inputFilePath);
         {
             while (!reader.EndOfStream)
             {
@@ -25,7 +22,7 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
             }
         }
 
-        using (StreamWriter writer = new StreamWriter(OutputFilePath))
+        using (StreamWriter writer = new StreamWriter(outputFilePath))
         {
             foreach (var entry in _histogram.ToImmutableSortedDictionary())
             {

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace WordCounter;
 
-internal class TextFileProcessor(string inputFilePath, string outputFilePath)
+internal class WordHistogram(string inputFilePath, string outputFilePath)
 {
     private readonly Dictionary<string, int> _histogram = [];
 

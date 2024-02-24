@@ -6,5 +6,5 @@ string currentDirectory = Environment.CurrentDirectory;
 string inputFilePath = Path.Combine(currentDirectory, "inputFile.txt");
 string outputFilePath = Path.Combine(currentDirectory, "outputFile.txt");
 
-var processor = new TextFileProcessor(inputFilePath, outputFilePath);
+var processor = new WordHistogram(inputFilePath, outputFilePath);
 processor.Process();

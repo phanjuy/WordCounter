@@ -12,7 +12,7 @@ internal class TextFileProcessor(string inputFilePath, string outputFilePath)
 
     public void Process()
     {
-        string[] lines = File.ReadAllLines(InputFilePath);
+        IEnumerable<string> lines = File.ReadLines(InputFilePath);
 
         foreach (var line in lines)
         {

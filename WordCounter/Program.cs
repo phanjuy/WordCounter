@@ -7,4 +7,5 @@ string inputFilePath = Path.Combine(currentDirectory, "inputFile.txt");
 string outputFilePath = Path.Combine(currentDirectory, "outputFile.txt");
 
 var processor = new WordHistogram(inputFilePath, outputFilePath);
-processor.Process();
+var histogram = processor.GetWordHistogram();
+processor.WriteToFile(histogram);

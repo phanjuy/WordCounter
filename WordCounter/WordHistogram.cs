@@ -5,32 +5,38 @@ namespace WordCounter;
 
 internal class WordHistogram(string inputFilePath, string outputFilePath)
 {
-    private readonly Dictionary<string, int> _histogram = [];
-
-    public void Process()
+    public Dictionary<string, int> GetWordHistogram()
     {
-        GetWordHistogram();
-        WriteHistogramToFile();
-    }
+        Dictionary<string, int> histogram = [];
 
-    private void GetWordHistogram()
-    {
-        StreamReader reader = File.OpenText(inputFilePath);
+        using StreamReader reader = File.OpenText(inputFilePath);
+
         while (!reader.EndOfStream)
         {
             var line = reader.ReadLine();
+
             if (!string.IsNullOrEmpty(line))
             {
                 List<string> words = Split(line);
-                CountWords(words);
+
+                foreach (var word in words)
+                {
+                    if (!histogram.TryGetValue(word, out int count))
+                    {
+                        histogram[word] = 0;
+                    }
+                    histogram[word] = ++count;
+                }
             }
         }
+        return histogram;
     }
 
-    private void WriteHistogramToFile()
+    public void WriteToFile(Dictionary<string, int> histogram)
     {
-        StreamWriter writer = File.CreateText(outputFilePath);
-        foreach (var entry in _histogram.ToImmutableSortedDictionary())
+        using StreamWriter writer = File.CreateText(outputFilePath);
+
+        foreach (var entry in histogram.ToImmutableSortedDictionary())
         {
             writer.WriteLine($"{entry.Key}: {entry.Value}");
         }
@@ -40,18 +46,5 @@ internal class WordHistogram(string inputFilePath, string outputFilePath)
     {
         var pattern = @"\W+";
         return Regex.Split(text.ToLowerInvariant(), pattern).ToList();
-    }
-
-    private Dictionary<string, int> CountWords(IEnumerable<string> words)
-    {
-        foreach (var word in words)
-        {
-            if (!_histogram.TryGetValue(word, out int value))
-            {
-                _histogram[word] = 0;
-            }
-            _histogram[word] = ++value;
-        }
-        return _histogram;
     }
 }

@@ -11,17 +11,17 @@ internal sealed class WordHistogram(string inputFilePath, string outputFilePath,
 
     public Dictionary<string, int> GetWordHistogram(string pattern = @"\W+")
     {
-        Dictionary<string, int> histogram = [];
+        Dictionary<string, int> histogram = new(StringComparer.InvariantCultureIgnoreCase);
 
         using StreamReader reader = fileSystem.File.OpenText(inputFilePath);
 
         while (!reader.EndOfStream)
         {
-            var line = reader.ReadLine();
+            string? line = reader.ReadLine();
 
             if (!string.IsNullOrEmpty(line))
             {
-                var words = Regex.Split(line.ToLowerInvariant(), pattern);
+                string[] words = Regex.Split(line, pattern);
 
                 foreach (var word in words)
                 {
